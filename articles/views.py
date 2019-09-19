@@ -57,4 +57,21 @@ def delete(request, article_pk):
     else:
         return redirect('articles:detail', article_pk)
 
+def update(request, article_pk):
+    # POST : 실제 UPDATE 로직 수행
+    # GET : UPDATE를 하기위한 FORM을 제공하는 페이지
+    article = get_object_or_404(Article, pk=article_pk)
+    if request.method == 'POST':
+        title = request.POST.get('title')
+        content = request.POST.get('content')
+        article.title = title
+        article.content = content
+        article.save()
+        
+        return redirect('articles:detail', article.pk)  
 
+    else:
+        context ={
+            'article' : article,
+        }
+        return render(request, 'articles/update.html', context)
