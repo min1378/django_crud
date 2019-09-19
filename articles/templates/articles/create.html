@@ -3,9 +3,11 @@
 
 {% block body %}
   <h1>New Articles</h1>
-  <form action="{% url 'articles:create'  %}">
+  <form action="{% url 'articles:create'  %}" method="POST">
+    {% csrf_token %}
     <input type="text" name='title'><br>
     <textarea name="content" cols="30" rows="10"></textarea><br>
     <button type="submit">작성하기</button>
   </form>
+  <a href="{% url 'articles:create' %}">[뒤로가기]</a>
 {% endblock body %}

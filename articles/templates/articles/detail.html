@@ -6,5 +6,14 @@
   <p>작성일자: {{ article.created_at }}</p>
   <hr>
   <p> {{ article.content }} </p>
-  <a href="{% url 'articles:index' %}">[뒤로가기]</a> <a href="{% url 'articles:delete' article.pk %}">[삭제하기]</a>
+  <a href="{% url 'articles:index' %}">[뒤로가기]</a>
+  <form action="{% url 'articles:delete' article.pk %}" method="POST">
+    {% csrf_token %}
+    <button type="submit">삭제하기</button>
+  </form>
+
+
+
+
+  {% comment %} <a href="{% url 'articles:delete' article.pk %}">[삭제하기]</a> {% endcomment %}
 {% endblock body %}

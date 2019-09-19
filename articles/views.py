@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import Article
 # Create your views here.
 #articles의 메인페이지, article list를 보여줌
@@ -15,34 +15,46 @@ def index(request):
 # Detail 페이지를 보여준다.
 def detail(request, article_pk):
     # SELECT * FROM articles WHERE pk=3 이런느낌의...
-    article = Article.objects.get(pk=article_pk)
+    article = get_object_or_404(Article, pk=article_pk)
     context = {
         'article' : article,
     }
     return render(request, 'articles/detail.html', context)
 
 #입력페이지 제공
-def new(request):
-    return render(request, 'articles/new.html')
+#GET /articles/create/ -> 페이지만 받아가겠다.
+# def new(request):
+#     return render(request, 'articles/new.html')
 
 
 #데이터를 전달받아 article 생성하는 페이지
+#POST /articles/create/
 def create(request):
+    # 요청이 POST라면 사용자 데이터 받아서 article 생성
     # /articles/new/의 new.html의 form에서 전달받은 데이터들
-    title = request.GET.get('title')
-    content = request.GET.get('content')
+    if request.method == 'POST':
+        title = request.POST.get('title')
+        content = request.POST.get('content')
 
-    article = Article()
-    article.title = title
-    article.content = content
-    article.save()
+        article = Article()
+        article.title = title
+        article.content = content
+        article.save()
 
-    return redirect('articles:detail', article.pk)
+        return redirect('articles:detail', article.pk)  
+
+    else:
+        # 만약 GET 요청으로 들어오면 html 페이지 렌더링
+        return render(request, 'articles/create.html')
 
 
 def delete(request, article_pk):
-    article = Article.objects.get(pk=article_pk)
-    article.delete()
+    article = get_object_or_404(Article, pk=article_pk)
+    if request.method == 'POST': 
+        article.delete()
+        return redirect('articles:index')
 
-    return redirect('articles:index')
+    else:
+        return redirect('articles:detail', article_pk)
+
 
