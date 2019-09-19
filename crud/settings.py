@@ -60,7 +60,8 @@ ROOT_URLCONF = 'crud.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR,'crud', 'templates')],   
+        # template 폴더 안에 html 파일들을 찾겠다!
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
