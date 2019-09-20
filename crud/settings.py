@@ -33,7 +33,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     #local apps
     'articles',
-    
+    'jobs',
 
 
     # Django apps

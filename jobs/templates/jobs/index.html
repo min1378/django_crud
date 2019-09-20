@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block title %} JOBS index{% endblock title %}
+{% block body %}
+  <h1>당신의 전생직업은?</h1>
+  <h2>이름을 입력하세요.</h2>
+  <form action="{% url 'jobs:create' %}" method="post">
+    {% csrf_token %}
+    <input type="text" name='name'><br>
+  <button type="submit">결과보기</button>
+  </form>
+{% endblock body %}
