@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Article
+from .models import Article, Comment
 # Create your views here.
 #articles의 메인페이지, article list를 보여줌
 
@@ -11,15 +11,7 @@ def index(request):
     }
     return render(request, 'articles/index.html', context)
 
-# variable Routing으로 사용자가 원하는 페이지를 pk로 받아 
-# Detail 페이지를 보여준다.
-def detail(request, article_pk):
-    # SELECT * FROM articles WHERE pk=3 이런느낌의...
-    article = get_object_or_404(Article, pk=article_pk)
-    context = {
-        'article' : article,
-    }
-    return render(request, 'articles/detail.html', context)
+
 
 #입력페이지 제공
 #GET /articles/create/ -> 페이지만 받아가겠다.
@@ -75,3 +67,27 @@ def update(request, article_pk):
             'article' : article,
         }
         return render(request, 'articles/update.html', context)
+
+# variable Routing으로 사용자가 원하는 페이지를 pk로 받아 
+# Detail 페이지를 보여준다.
+def detail(request, article_pk):
+    # SELECT * FROM articles WHERE pk=3 이런느낌의...
+    article = get_object_or_404(Article, pk=article_pk)
+    comments = article.comment_set.all()
+    context = {
+        'article' : article,
+        'comments' : comments,
+    }
+    return render(request, 'articles/detail.html', context)
+
+def comments_create(request, article_pk):
+    article = get_object_or_404(Article, pk=article_pk)
+    if request.method == 'POST':
+        content = request.POST.get('content')
+        comment = Comment()
+        comment.content = content
+        comment.article = article
+        comment.save()
+    # article_pk에 해당하는 article에 새로운 comment 생성
+    # 생성한 다음 article detail page 로 redirect
+        return redirect('articles:detail', article_pk)
